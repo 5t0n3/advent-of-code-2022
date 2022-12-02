@@ -3,8 +3,11 @@
 import Formatting
 
 {-
-Outcome encodings: 0 -> lose, 1 -> draw, 2 -> win
-Shape encodings: 0 -> rock, 1 -> paper, 2 -> scissors
+Outcome encodings: lose -> 0, draw -> 1, win -> 2
+Outcome point values; lose -> 0, draw -> 3, win -> 6
+
+Shape encodings: rock -> 0, paper -> 1, scissors -> 2
+Shape point values: rock -> 1, paper -> 2, scissors -> 3
 
 General formula for points from round: outcome * 3 + (shape + 1)
 
@@ -54,11 +57,10 @@ main = do
   fprintLn ("Part 2 (real strategy score): " % int) realScore
 
 -- 0 -> rock/lose, 1 -> paper/draw, 2 -> scissors/win
+-- In ASCII, 65 is "A" and 88 is "X"
+-- The mod 23 (88 - 65 = 23) makes it so X-Z fall in the 0-2 range as well
 parseLetter :: Char -> Int
-parseLetter c = if secondPos >= 0 then secondPos else firstPos
-  where codepoint = fromEnum c
-        firstPos = codepoint - 65 -- A-C
-        secondPos = codepoint - 88 -- X-Z
+parseLetter c = mod (fromEnum c - 65) 23
 
 parseLine :: String -> (Int, Int)
 parseLine (opp:_:code:[]) = (parseLetter opp, parseLetter code)
