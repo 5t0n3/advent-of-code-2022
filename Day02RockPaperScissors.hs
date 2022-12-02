@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
+import Data.Foldable (foldl')
 import Formatting
 
 {-
@@ -51,8 +52,8 @@ main :: IO ()
 main = do
   input <- readFile "input/day02.txt"
   let parsed = map parseLine . lines $ input
-      strategyScore = sum . map (uncurry part1Result) $ parsed -- Expected: 11767
-      realScore = sum . map (uncurry part2Result) $ parsed -- Expected: 13886
+      strategyScore = foldl' (flip ((+) . part1Result)) 0 parsed -- Expected: 11767
+      realScore = foldl' (flip ((+) . part2Result)) 0 parsed -- Expected: 13886
   fprintLn ("Part 1 (strategy score): " % int) strategyScore
   fprintLn ("Part 2 (real strategy score): " % int) realScore
 
@@ -77,12 +78,12 @@ infixl 6 -.
 (-.) :: Int -> Int -> Int
 a -. b = mod (a - b) 3
 
-part1Result :: Int -> Int -> Int
-part1Result opponent you = outcome * 3 + (you + 1)
+part1Result :: (Int, Int) -> Int
+part1Result (opponent, you) = outcome * 3 + (you + 1)
   where
     outcome = you +. 1 -. opponent
 
-part2Result :: Int -> Int -> Int
-part2Result opponent outcome = outcome * 3 + (you + 1)
+part2Result :: (Int, Int) -> Int
+part2Result (opponent, outcome) = outcome * 3 + (you + 1)
   where
     you = opponent +. (outcome -. 1)
