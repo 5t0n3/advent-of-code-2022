@@ -14,9 +14,9 @@ General formula for points from round: outcome * 3 + (shape + 1)
 To find your shape given the opponent's shape and outcome, in the above
 encoding each shape loses to the shape 1 greater than it, wrapping around
 from 2 to 0. As a corrolary, each shape wins against the previous one,
-again wrapping around. Obviously each shape draws with the one equal to itself. 
+again wrapping around. Obviously each shape draws with the one equal to itself.
 The wrapping is modeled really well by addition modulo an integer (3 in this case,
-since there's 3 different outcomes/shapes). Denoting the opponent's shape as "o", 
+since there's 3 different outcomes/shapes). Denoting the opponent's shape as "o",
 the following properties should be true, where the results are the symbol we
 should play:
 
@@ -63,22 +63,26 @@ parseLetter :: Char -> Int
 parseLetter c = mod (fromEnum c - 65) 23
 
 parseLine :: String -> (Int, Int)
-parseLine (opp:_:code:[]) = (parseLetter opp, parseLetter code)
+parseLine (opp : _ : code : []) = (parseLetter opp, parseLetter code)
 
 -- addition mod 3
 infixl 6 +.
+
 (+.) :: Int -> Int -> Int
 a +. b = mod (a + b) 3
 
 -- subtraction mod 3
 infixl 6 -.
+
 (-.) :: Int -> Int -> Int
 a -. b = mod (a - b) 3
 
 part1Result :: Int -> Int -> Int
 part1Result opponent you = outcome * 3 + (you + 1)
-  where outcome = (you +. 1 -. opponent)
+  where
+    outcome = you +. 1 -. opponent
 
 part2Result :: Int -> Int -> Int
 part2Result opponent outcome = outcome * 3 + (you + 1)
-  where you = opponent +. (outcome -. 1)
+  where
+    you = opponent +. (outcome -. 1)
