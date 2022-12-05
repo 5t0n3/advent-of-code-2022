@@ -15,7 +15,8 @@ main = do
       anyOverlaps = count anyOverlap ranges -- Expected: 859
   fprintLn ("Part 1 (complete overlap): " % int) completeOverlaps
   fprintLn ("Part 2 (any overlap): " % int) anyOverlaps
-  where count predicate = foldl' (flip ((+) . fromEnum . predicate)) 0
+  where
+    count predicate = foldl' (flip ((+) . fromEnum . predicate)) 0
 
 -- used to make function application more convenient
 -- (works because it's only ever used on lists with 2 elements)
@@ -29,5 +30,6 @@ anyOverlap :: (IntSet, IntSet) -> Bool
 anyOverlap = not . uncurry S.disjoint
 
 parseRange :: String -> IntSet
-parseRange range = S.fromList [(read start)..(read end)]
-  where [start, end] = splitOn "-" range
+parseRange range = S.fromList [(read start) .. (read end)]
+  where
+    [start, end] = splitOn "-" range
