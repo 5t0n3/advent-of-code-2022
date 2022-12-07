@@ -8,7 +8,8 @@ import qualified Data.List.Split as S
 import Data.Maybe (fromJust)
 import Formatting
 
--- directories are represented as a list of all their components to avoid name collisions
+-- directories are represented as a list of all their components in reverse to avoid name collisions
+-- we also don't care about filenames so only their sizes are stored
 data Entry = Directory [String] | File Int deriving (Show)
 
 -- directory -> children mapping
@@ -18,20 +19,18 @@ data State = State
   { currentDir :: [String],
     children :: Children
   }
-  deriving (Show)
 
 baseState :: State
 baseState =
   State
-    { currentDir = ["/"],
+    { currentDir = [],
       children = M.empty
     }
 
 main :: IO ()
 main = do
   input <- readFile "input/day07.txt"
-  -- `tail` ignores the initial "cd /"
-  let splitCommands = tail . map (splitNoBlanks "\n") . splitNoBlanks "$ " $ input
+  let splitCommands = map (splitNoBlanks "\n") . splitNoBlanks "$ " $ input
       -- PART 1
       State {children} = evalCommands splitCommands baseState
       directorySizes = M.map (directorySize children) children
