@@ -2,7 +2,6 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 import Control.Monad (liftM)
-import Data.IntMap.Strict ((!))
 import qualified Data.IntMap.Strict as I
 import Data.List (foldl')
 import Data.List.Split (endBy)
@@ -34,7 +33,7 @@ main = do
   where
     countTailPositions len = S.size . tailHistory . foldl' moveRope (startingRope len)
 
--- Point transformation
+-- Point transformation (i.e. tuple addition)
 infixl 6 <+>
 
 (<+>) :: Point -> (Int, Int) -> Point
@@ -64,12 +63,8 @@ actualMove prevNew knotNum current
   -- for the first knot, prevNew is just the input move
   | knotNum == 1 = dupe $ current <+> prevNew
   -- already close enough to the previous knot
-  | (abs dx < 2 && abs dy < 2) = dupe current
-  -- need to move vertically (no motion horizontally)
-  | dx == 0 = dupe $ current <+> (0, signum dy)
-  -- need to move horizontally (no motion vertically)
-  | dy == 0 = dupe $ current <+> (signum dx, 0)
-  -- need to move diagonally (always 1 unit vertically/horizontally towards previous knot)
+  | abs dx < 2 && abs dy < 2 = dupe current
+  -- move 1 step in one (or both) directions towards previous knot
   | otherwise = dupe $ current <+> (signum dx, signum dy)
   where
     (dx, dy) = prevNew <+> negateTuple current
