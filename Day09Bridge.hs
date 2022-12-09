@@ -53,13 +53,13 @@ parseMove (direction : _ : amount) = replicate (read amount) increment
 moveRope :: Rope -> (Int, Int) -> Rope
 moveRope Rope {knots, tailHistory} move = Rope {knots = newKnots, tailHistory = S.insert newTail tailHistory}
   where
-    newKnots = snd $ I.mapAccumWithKey actualMove move knots
+    newKnots = snd $ I.mapAccumWithKey updateKnot move knots
     -- findMax returns the value associated with the maximum key in a map
     -- in this case, it always returns the position of the tail
     (_, newTail) = I.findMax newKnots
 
-actualMove :: Point -> Int -> Point -> (Point, Point)
-actualMove prevNew knotNum current
+updateKnot :: Point -> Int -> Point -> (Point, Point)
+updateKnot prevNew knotNum current
   -- for the first knot, prevNew is just the input move
   | knotNum == 1 = dupe $ current <+> prevNew
   -- already close enough to the previous knot
