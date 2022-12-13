@@ -10,7 +10,7 @@
   in {
     devShells.${system}.default = pkgs.mkShell {
       packages = with pkgs.haskellPackages; [
-        (ghcWithPackages (nixpkgs.lib.attrVals ["split" "formatting" "unordered-containers"]))
+        (ghcWithPackages (nixpkgs.lib.attrVals ["split" "formatting" "unordered-containers" "parsec"]))
         ormolu
       ];
     };
