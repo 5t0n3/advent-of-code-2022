@@ -50,5 +50,5 @@ main = do
       heights = toMap splitInput
       part1 = bfs heights 'E' 'S'
       part2 = bfs heights 'E' 'a'
-  fprintLn ("Part 1 (shortest path to start): " % int) part1
-  fprintLn ("Part 2 (shortest path to 'a'): " % int) part2
+  fprintLn ("Part 1 (shortest path to start): " % int) part1 -- Expected: 468
+  fprintLn ("Part 2 (shortest path to 'a'): " % int) part2 -- Expected: 459
